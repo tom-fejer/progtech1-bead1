@@ -1,5 +1,5 @@
 package hu.elte.progtech.taxonomy;
 
-public class Genus {
+public class Genus extends Familia {
 
 }

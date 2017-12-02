@@ -1,5 +1,5 @@
 package hu.elte.progtech.taxonomy;
 
-public class Familia {
+public class Familia extends Ordo {
 
 }

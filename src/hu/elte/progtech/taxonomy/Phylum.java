@@ -1,5 +1,5 @@
 package hu.elte.progtech.taxonomy;
 
-public class Phylum {
+public class Phylum extends Taxon {
 
 }
