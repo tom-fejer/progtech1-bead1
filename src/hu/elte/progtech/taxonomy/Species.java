@@ -5,8 +5,9 @@ import java.util.List;
 
 public class Species extends Genus {
 
+	public static final String type = "S";
 	private String hunName;
-	private List<Taxon> preys = new ArrayList<Taxon>();
+	private List<String> preys = new ArrayList<String>(); // full names of species
 	private int initPopulation;
 	private int growthRate;
 
@@ -18,12 +19,15 @@ public class Species extends Genus {
 		this.hunName = hunName;
 	}
 
-	public List<Taxon> getPreys() {
+	public List<String> getPreys() {
 		return preys;
 	}
 
-	public void addPrey(Taxon prey) {
-		this.preys.add(prey);
+	// simplify just to add by FullName -> "decode" in HierarchyTree
+	public void addPreys(List<String> preys) {
+		for (String prey : preys) {
+			this.preys.add(prey);
+		}
 	}
 
 	public int getInitPopulation() {
@@ -52,5 +56,10 @@ public class Species extends Genus {
 		sb.append(" ");
 		sb.append(getName().toLowerCase());
 		return sb.toString();
+	}
+
+	@Override
+	String type() {
+		return type;
 	}
 }

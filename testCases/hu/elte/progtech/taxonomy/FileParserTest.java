@@ -12,12 +12,19 @@ public class FileParserTest {
 		FileParser fileParser = new FileParser("resources/nosuchfile.txt");
 		Assert.assertEquals(null, fileParser.parse());
 	}
-	
+
 	@Test
 	public void testEmptyFileParse() throws FileNotFoundException {
 		FileParser fileParser = new FileParser("resources/empty.txt");
-		// TODO: create HierarchyTree THEN generate its hashCode/equals methods so it can be tested
 		HierarchyTree emptyTree = new HierarchyTree();
-		Assert.assertEquals(emptyTree , fileParser.parse());
+		Assert.assertEquals(emptyTree, fileParser.parse());
+	}
+
+	@Test
+	public void testOneLineParse() {
+		FileParser fileParser = new FileParser("resources/OneLine.txt");
+		HierarchyTree expected = new HierarchyTree();
+		expected.addRoot("P", new Phylum());
+		Assert.assertEquals(expected, fileParser.parse());
 	}
 }

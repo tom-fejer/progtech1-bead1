@@ -2,51 +2,49 @@ package hu.elte.progtech.taxonomy;
 
 public class HierarchyTree {
 
-	private Taxon root;
+	private Taxon root = new Root();
 
 	public Taxon getRoot() {
 		return root;
 	}
 
-	public void addNode(String taxonName, Taxon node) {
-		if (getRoot() == null) {
-			this.root = node;
-			getRoot().setName(taxonName);
-		} else
-			addNode(getRoot(), taxonName, node);
+	public Taxon addNode(Taxon parent, Taxon node) {
+		return parent.setChild(node);
 	}
 
-	public void addNode(Taxon parent, String parentName, Taxon node) throws IllegalArgumentException {
-		Taxon parentNode = createTaxon(parentName);
-		if (parentNode == null) {
-			throw new IllegalArgumentException();
-		} else
-			parentNode.setChild(node);
-	}
-
-	private Taxon createTaxon(String parentName) {
+	// TODO: modify: step through parents instead of children (call with lastAddedNode as starting point)
+	public Taxon searchType(Taxon node, String typeToGet) {
 		Taxon result = null;
-		switch (parentName) {
-		case "Phylum":
-			result = new Phylum();
-			break;
-		case "Classis":
-			result = new Classis();
-			break;
-		case "Ordo":
-			result = new Ordo();
-			break;
-		case "Familia":
-			result = new Familia();
-			break;
-		case "Genus":
-			result = new Genus();
-			break;
-		case "Species":
-			result = new Species();
-			break;
+		if (node.type().equals(typeToGet)) {
+			return node;
 		}
-		result.setName(parentName);
+		if (node.getChildren().size() > 0) {
+			for (Taxon child : node.getChildren()) {
+				result = searchType(child, typeToGet);
+				if (result != null) {
+					return result;
+				}
+			}
+		}
 		return result;
 	}
+
+	// returns an array of full species names
+	// call this from FileParser on its concrete tree
+	// search species of that taxon with searchType()
+	public String[] getSpeciesOf(String prey) {
+		String[] parts = prey.split(" ");
+		searchType(parts[0]);
+		return null;
+	}
+	
+	public String preyType(String prey) {
+		String[] parts = prey.split(" ");
+		if (TaxonType.contains(parts[0])) {
+			return "taxon";
+		} else {
+			return "fullName";
+		}
+	}
+	
 }
