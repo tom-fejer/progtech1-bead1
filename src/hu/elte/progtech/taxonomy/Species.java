@@ -10,6 +10,12 @@ public class Species extends Genus {
 	private List<String> preys = new ArrayList<String>(); // full names of species
 	private int initPopulation;
 	private int growthRate;
+	private int population;
+
+	@Override
+	String type() {
+		return type;
+	}
 
 	public String getHunName() {
 		return hunName;
@@ -36,6 +42,7 @@ public class Species extends Genus {
 	public boolean setInitPopulation(int initPopulation) throws IllegalArgumentException {
 		if (initPopulation > 0) {
 			this.initPopulation = initPopulation;
+			this.population = initPopulation;
 			return true;
 		} else
 			throw new IllegalArgumentException();
@@ -57,8 +64,12 @@ public class Species extends Genus {
 		return sb.toString();
 	}
 
-	@Override
-	String type() {
-		return type;
+	public int getPopulation() {
+		return population;
 	}
+
+	public void setPopulation(int population) {
+		this.population = population;
+	}
+
 }

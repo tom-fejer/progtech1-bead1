@@ -25,7 +25,8 @@ public abstract class Taxon {
 
 	public Taxon setChild(Taxon child) {
 		this.children.add(child);
-		this.children.get(this.children.size() - 1).setParent(this);
+//		this.children.get(this.children.size() - 1).setParent(this);
+		child.setParent(this);
 		return this.children.get(this.children.size() - 1);
 	}
 

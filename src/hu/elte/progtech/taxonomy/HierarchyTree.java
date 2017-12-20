@@ -13,7 +13,7 @@ public class HierarchyTree {
 
 	public Taxon addNode(Taxon parent, Taxon node) {
 		if (parent == null) {
-			System.err.println("Error: non-existant parent node!");
+			System.err.println("Error: non-existent parent node!");
 			return null;
 		} else {
 			return parent.setChild(node);
@@ -32,26 +32,30 @@ public class HierarchyTree {
 
 	public List<String> getSpeciesOf(String prey) {
 		String[] parts = prey.split(" ");
-		return searchName(this.root, parts[1]);
+		Taxon nodeToWalk = searchByName(this.getRoot(), parts[1]);
+		return walk(nodeToWalk);
 	}
 
-	private List<String> searchName(Taxon node, String name) {
-		List<String> result = new LinkedList<String>();
-		if (!node.getName().equals(name)) {
-			for (Taxon child : node.getChildren()) {
-				searchName(child, name);
-			}
+	public Taxon searchByName(Taxon node, String name) {
+		Taxon result = null;
+		if (node.getName().equals(name)) {
+			return node;
 		} else {
-			result = walk(node);
+			for (Taxon child : node.getChildren()) {
+				result = searchByName(child, name);
+				if (result != null) {
+					break;
+				}
+			}
 		}
 		return result;
 	}
 
-	private List<String> walk(Taxon node) {
+	public List<String> walk(Taxon node) {
 		List<String> result = new LinkedList<String>();
-		if (node.getChildren() != null) {
+		if (node.getChildren().size() > 0) {
 			for (Taxon child : node.getChildren()) {
-				walk(child);
+				result.addAll(walk(child));
 			}
 		}
 		if (node.type().equals("S")) {
@@ -68,6 +72,38 @@ public class HierarchyTree {
 		} else {
 			return "fullName";
 		}
+	}
+
+	public List<Species> getLeaves(Taxon node) {
+		List<Species> result = new LinkedList<Species>();
+		if (node.getChildren().size() > 0) {
+			for (Taxon child : node.getChildren()) {
+				result.addAll(getLeaves(child));
+			}
+		}
+		if (node.type().equals("S")) {
+			Species species = (Species) node;
+			result.add(species);
+		}
+		return result;
+	}
+
+	public Species searchByFullName(Taxon node, String fullName) {
+		Species result = new Species();
+		if (node instanceof Species) {
+			Species species = (Species) node;
+			if (species.getFullName().equals(fullName)) {
+				result = species;
+			}
+		} else if (node.getChildren().size() > 0) {
+			for (Taxon child : node.getChildren()) {
+				result = searchByFullName(child, fullName);
+				if (result.getHunName() != null) {
+					break;
+				}
+			}
+		}
+		return result;
 	}
 
 }

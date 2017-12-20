@@ -19,6 +19,10 @@ public class FileParser {
 		}
 	}
 
+	public HierarchyTree getTree() {
+		return tree;
+	}
+
 	public void parse() {
 		this.tree = new HierarchyTree();
 		Taxon lastAddedNode = null;
@@ -68,11 +72,12 @@ public class FileParser {
 		lineScanner.next(); // skip "|" in line
 		lineScanner.useDelimiter("\\d");
 		String[] preys = lineScanner.next().split(",");
-		for (String prey : preys) {
-			prey = prey.trim();
+		String result[] = new String[preys.length];
+		for (int i = 0; i < preys.length; i++) {
+			result[i] = preys[i].trim();
 		}
 		lineScanner.reset();
-		return preys;
+		return result;
 	}
 
 	private Taxon createTaxon(String taxonType, String taxonName, String hunName, String[] preys, int initPopulation,
@@ -112,7 +117,7 @@ public class FileParser {
 
 	private List<String> genPreysNames(String[] preys) {
 		List<String> result = new ArrayList<String>();
-		if (!preys.equals(null)) {
+		if (preys != null) {
 			for (String prey : preys) {
 				if (this.tree.preyType(prey).equals("fullName")) {
 					result.add(prey);
@@ -126,17 +131,18 @@ public class FileParser {
 	}
 
 	private Taxon searchParentNode(Taxon newNode, Taxon lastAddedNode) {
+		Taxon result = null;
 		if (lastAddedNode.type().equals(newNode.type())) {
-			return lastAddedNode.getParent();
+			result = lastAddedNode.getParent();
 		}
-		for (int i = 0; i < TaxonType.values.length - 2; i++) {
+		for (int i = 0; i < TaxonType.values.length - 1; i++) {
 			if (lastAddedNode.type().equals(TaxonType.values[i]) && newNode.type().equals(TaxonType.values[i + 1])) {
-				return lastAddedNode;
+				result = lastAddedNode;
 			} else if (newNode.type().equals(TaxonType.values[i + 1])) {
 				String typeToGet = TaxonType.values[i];
-				return this.tree.searchType(lastAddedNode, typeToGet);
+				result = this.tree.searchType(lastAddedNode, typeToGet);
 			}
 		}
-		return null;
+		return result;
 	}
 }
