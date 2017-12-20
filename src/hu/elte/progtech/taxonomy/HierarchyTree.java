@@ -1,5 +1,8 @@
 package hu.elte.progtech.taxonomy;
 
+import java.util.LinkedList;
+import java.util.List;
+
 public class HierarchyTree {
 
 	private Taxon root = new Root();
@@ -9,35 +12,55 @@ public class HierarchyTree {
 	}
 
 	public Taxon addNode(Taxon parent, Taxon node) {
-		return parent.setChild(node);
+		if (parent == null) {
+			System.err.println("Error: non-existant parent node!");
+			return null;
+		} else {
+			return parent.setChild(node);
+		}
 	}
 
-	// TODO: modify: step through parents instead of children (call with lastAddedNode as starting point)
 	public Taxon searchType(Taxon node, String typeToGet) {
 		Taxon result = null;
 		if (node.type().equals(typeToGet)) {
 			return node;
-		}
-		if (node.getChildren().size() > 0) {
-			for (Taxon child : node.getChildren()) {
-				result = searchType(child, typeToGet);
-				if (result != null) {
-					return result;
-				}
-			}
+		} else {
+			result = searchType(node.getParent(), typeToGet);
 		}
 		return result;
 	}
 
-	// returns an array of full species names
-	// call this from FileParser on its concrete tree
-	// search species of that taxon with searchType()
-	public String[] getSpeciesOf(String prey) {
+	public List<String> getSpeciesOf(String prey) {
 		String[] parts = prey.split(" ");
-		searchType(parts[0]);
-		return null;
+		return searchName(this.root, parts[1]);
 	}
-	
+
+	private List<String> searchName(Taxon node, String name) {
+		List<String> result = new LinkedList<String>();
+		if (!node.getName().equals(name)) {
+			for (Taxon child : node.getChildren()) {
+				searchName(child, name);
+			}
+		} else {
+			result = walk(node);
+		}
+		return result;
+	}
+
+	private List<String> walk(Taxon node) {
+		List<String> result = new LinkedList<String>();
+		if (node.getChildren() != null) {
+			for (Taxon child : node.getChildren()) {
+				walk(child);
+			}
+		}
+		if (node.type().equals("S")) {
+			Species species = (Species) node;
+			result.add(species.getFullName());
+		}
+		return result;
+	}
+
 	public String preyType(String prey) {
 		String[] parts = prey.split(" ");
 		if (TaxonType.contains(parts[0])) {
@@ -46,5 +69,5 @@ public class HierarchyTree {
 			return "fullName";
 		}
 	}
-	
+
 }

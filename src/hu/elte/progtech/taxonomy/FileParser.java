@@ -28,8 +28,6 @@ public class FileParser {
 				this.tree.getRoot().setChild(taxonToAdd);
 				int lastNodeIndex = this.tree.getRoot().getChildren().size() - 1;
 				lastAddedNode = this.tree.getRoot().getChildren().get(lastNodeIndex);
-			} else if (lastAddedNode.getParent().equals(this.tree.getRoot())) {
-				lastAddedNode = this.tree.addNode(this.tree.getRoot(), taxonToAdd);
 			} else {
 				Taxon parentNode = searchParentNode(taxonToAdd, lastAddedNode);
 				lastAddedNode = this.tree.addNode(parentNode, taxonToAdd);
@@ -67,17 +65,17 @@ public class FileParser {
 	}
 
 	private String[] parsePreys(Scanner lineScanner) {
+		lineScanner.next(); // skip "|" in line
 		lineScanner.useDelimiter("\\d");
 		String[] preys = lineScanner.next().split(",");
-		String[] result = new String[preys.length];
-		for (int i = 0; i < preys.length; i++) {
-			result[i] = preys[i].trim();
+		for (String prey : preys) {
+			prey = prey.trim();
 		}
 		lineScanner.reset();
-		return result;
+		return preys;
 	}
 
-	public Taxon createTaxon(String taxonType, String taxonName, String hunName, String[] preys, int initPopulation,
+	private Taxon createTaxon(String taxonType, String taxonName, String hunName, String[] preys, int initPopulation,
 			int growthRate) {
 		Taxon taxon = null;
 		switch (taxonType) {
@@ -119,10 +117,8 @@ public class FileParser {
 				if (this.tree.preyType(prey).equals("fullName")) {
 					result.add(prey);
 				} else if (this.tree.preyType(prey).equals("taxon")) {
-					String[] animals = this.tree.getSpeciesOf(prey);
-					for (String species : animals) {
-						result.add(species);
-					}
+					List<String> animals = this.tree.getSpeciesOf(prey);
+					result.addAll(animals);
 				}
 			}
 		}
@@ -138,7 +134,7 @@ public class FileParser {
 				return lastAddedNode;
 			} else if (newNode.type().equals(TaxonType.values[i + 1])) {
 				String typeToGet = TaxonType.values[i];
-				return this.tree.searchType(this.tree.getRoot(), typeToGet);
+				return this.tree.searchType(lastAddedNode, typeToGet);
 			}
 		}
 		return null;

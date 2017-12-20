@@ -23,7 +23,6 @@ public class Species extends Genus {
 		return preys;
 	}
 
-	// simplify just to add by FullName -> "decode" in HierarchyTree
 	public void addPreys(List<String> preys) {
 		for (String prey : preys) {
 			this.preys.add(prey);
