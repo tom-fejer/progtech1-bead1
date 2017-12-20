@@ -23,26 +23,55 @@ public class Simulation {
 
 	public void run() {
 		List<Species> animals = this.tree.getLeaves(this.tree.getRoot());
-		for (Species animal : animals) {
-			animal.setPopulation(
-					animal.getPopulation() + (animal.getPopulation() / 2) * (numOfDays / animal.getGrowthRate()));
+		calculatePopulation(animals);
+		animals = this.tree.getLeaves(this.tree.getRoot());
+		printResults(animals);
+	}
 
-			if (!animal.getPreys().isEmpty()) {
-				List<Species> preys = new LinkedList<Species>();
-				for (String preyName : animal.getPreys()) {
-					preys.add(this.tree.searchByFullName(this.tree.getRoot(), preyName));
+	private void calculatePopulation(List<Species> animals) {
+		for (int i = 1; i <= numOfDays; i++) {
+			for (Species animal : animals) {
+				sex(i, animal);
+				hunt(animal);
+			}
+		}
+	}
 
-				}
-				for (Species prey : preys) {
-					prey.setPopulation(prey.getPopulation() - (animal.getPopulation() * numOfDays));
-					if (prey.getPopulation() < 0) {
-						animal.setPopulation(prey.getPopulation());
-						prey.setPopulation(0);
+	private void sex(int index, Species animal) {
+		if (index % animal.getGrowthRate() == 0) {
+			animal.setPopulation(animal.getPopulation() + (animal.getPopulation() / 2) * (index / animal.getGrowthRate()));
+		}
+	}
+
+	private void hunt(Species animal) {
+		if (!animal.getPreys().isEmpty()) {
+			List<Species> preys = new LinkedList<Species>();
+			for (String preyName : animal.getPreys()) {
+				preys.add(this.tree.searchByFullName(this.tree.getRoot(), preyName));
+			}
+			int remainder = 0;
+			for (int j = 0; j < preys.size(); j++) {
+				if (preys.get(j).getPopulation() > 0) {
+					if (remainder > 0) {
+						preys.get(j).setPopulation(preys.get(j).getPopulation() - remainder);
+						remainder = 0;
+					} else {
+						preys.get(j).setPopulation(preys.get(j).getPopulation() - animal.getPopulation());
 					}
+					if (preys.get(j).getPopulation() < 0) {
+						remainder = preys.get(j).getPopulation() * (-1);
+						preys.get(j).setPopulation(0);
+					} else {
+						break;
+					}
+				} else if (j == preys.size() - 1) {
+					animal.setPopulation(0);
 				}
 			}
 		}
-		List<Species> result = this.tree.getLeaves(this.tree.getRoot());
+	}
+
+	private void printResults(List<Species> result) {
 		for (Species animal : result) {
 			if (animal.getPopulation() > 0) {
 				System.out.println(animal.getFullName() + " : " + animal.getPopulation());
