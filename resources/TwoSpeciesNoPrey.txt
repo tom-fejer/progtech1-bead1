@@ -1,0 +1,10 @@
+P Chordata
+C Mammalia
+O Lagomorpha
+F Leporidae
+G Lepus
+S Europaeus mezei nyul 5 3
+O Rodentia
+F Muridae
+G Mus
+S Musculus hazi eger 6 4

@@ -2,27 +2,21 @@ package hu.elte.progtech.taxonomy;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Scanner;
 
 public class Simulation {
 
 	private int numOfDays = 0;
 	HierarchyTree tree = null;
+	List<Species> animals;
 
 	public Simulation(FileParser fileParser) {
-		Scanner input = new Scanner(System.in);
-		System.out.println("Add meg a napok számát!");
-		int days = input.nextInt();
-		if (days > 0) {
-			this.numOfDays = days;
-			fileParser.parse();
-			this.tree = fileParser.getTree();
-		}
-		input.close();
+		fileParser.parse();
+		this.tree = fileParser.getTree();
 	}
 
-	public void run() {
-		List<Species> animals = this.tree.getLeaves(this.tree.getRoot());
+	public void run(int numOfDays) {
+		this.numOfDays = numOfDays;
+		animals = this.tree.getLeaves(this.tree.getRoot());
 		calculatePopulation(animals);
 		animals = this.tree.getLeaves(this.tree.getRoot());
 		printResults(animals);
@@ -39,7 +33,8 @@ public class Simulation {
 
 	private void sex(int index, Species animal) {
 		if (index % animal.getGrowthRate() == 0) {
-			animal.setPopulation(animal.getPopulation() + (animal.getPopulation() / 2) * (index / animal.getGrowthRate()));
+			animal.setPopulation(
+					animal.getPopulation() + (animal.getPopulation() / 2) * (index / animal.getGrowthRate()));
 		}
 	}
 

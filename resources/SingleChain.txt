@@ -1,0 +1,6 @@
+P Chordata
+C Mammalia
+O Lagomorpha
+F Leporidae
+G Lepus
+S Europaeus mezei nyul 5 3
