@@ -13,19 +13,27 @@ class SimulationTest {
 	}
 
 	@Test
-	void testTwoSpeciesNoPreyOneDay() {
+	void testTwoSpeciesNoPrey() {
 		Simulation testSim = new Simulation(new FileParser("resources/TwoSpeciesNoPrey.txt"));
 		testSim.run(1);
 		Assert.assertTrue(testSim.animals.size() == 2);
 	}
 
 	@Test
-	void testThreeSpeciesWithPreyOneDay() {
+	void testThreeSpeciesWithPrey() {
 		Simulation testSim = new Simulation(new FileParser("resources/ThreeSpeciesWithPrey.txt"));
 		testSim.run(1);
 		Assert.assertTrue(testSim.animals.size() == 3);
+		Assert.assertTrue(testSim.animals.get(2).getPreys().size() == 2);
 	}
 
+	@Test
+	void testReproduction() {
+		Simulation testSim = new Simulation(new FileParser("resources/Reproduction.txt"));
+		testSim.run(5);
+		Assert.assertEquals(3, testSim.animals.get(0).getPopulation());
+	}
+	
 	@Test
 	void testPreyPrecedence() {
 		Simulation testSim = new Simulation(new FileParser("resources/PreyPrecedence.txt"));
