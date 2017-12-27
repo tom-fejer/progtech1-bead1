@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Species extends Genus {
 
-	public static final String type = "S";
+	public final String type = "S";
 	private String hunName;
 	private List<String> preys = new ArrayList<String>(); // full names of species
 	private int initPopulation;

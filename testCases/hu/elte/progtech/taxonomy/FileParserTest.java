@@ -16,7 +16,7 @@ public class FileParserTest {
 	}
 
 	@Test
-	public void testEmptyFileParse() throws FileNotFoundException {
+	public void testEmptyFileParse() {
 		FileParser fileParser = new FileParser("resources/empty.txt");
 		fileParser.parse();
 		Assert.assertTrue(fileParser.getTree().getRoot().getChildren().size() == 0);
@@ -44,7 +44,7 @@ public class FileParserTest {
 	public void testSingleSpeciesWithPreyParse() {
 		FileParser fileParser = new FileParser("resources/SingleSpeciesWithPrey.txt");
 		fileParser.parse();
-		Species actual = (Species) fileParser.getTree().getRoot().getChildren().get(1);
+		Species actual = (Species) fileParser.getTree().getRoot().getChildren().get(0).getChildren().get(1);
 		Assert.assertEquals("TestName", actual.getName());
 		Assert.assertEquals("Teszt Nev", actual.getHunName());
 		Assert.assertEquals("Prey preda", actual.getPreys().get(0));

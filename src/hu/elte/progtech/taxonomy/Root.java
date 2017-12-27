@@ -2,7 +2,7 @@ package hu.elte.progtech.taxonomy;
 
 public class Root extends Taxon {
 
-	private final String type = "Root";
+	public final String type = "Root";
 	private String name = "Root";
 
 	public String getName() {
@@ -11,7 +11,7 @@ public class Root extends Taxon {
 
 	@Override
 	String type() {
-		return this.type;
+		return type;
 	}
 
 	@Override

@@ -26,6 +26,13 @@ class SimulationTest {
 		Assert.assertTrue(testSim.animals.size() == 3);
 		Assert.assertTrue(testSim.animals.get(2).getPreys().size() == 2);
 	}
+	
+	@Test
+	void testSiblings() {
+		Simulation testSim = new Simulation(new FileParser("resources/Siblings.txt"));
+		testSim.run(1);
+		Assert.assertEquals(testSim.animals.get(0).getParent(), testSim.animals.get(1).getParent());
+	}
 
 	@Test
 	void testReproduction() {

@@ -1,2 +1,3 @@
-S Prey Preda 3 9
-S TestName Teszt Nev | Prey Preda 2 6
+G Prey
+S Preda Préda Állat 3 9
+S TestName Teszt Nev | Prey preda 2 6
